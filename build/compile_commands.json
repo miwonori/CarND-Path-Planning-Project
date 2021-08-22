@@ -1,0 +1,7 @@
+[
+{
+  "directory": "/mnt/d/carnd-projects/CarND-Path-Planning-Project/build",
+  "command": "/usr/bin/c++    -g   -std=c++11 -o CMakeFiles/path_planning.dir/src/main.cpp.o -c /mnt/d/carnd-projects/CarND-Path-Planning-Project/src/main.cpp",
+  "file": "/mnt/d/carnd-projects/CarND-Path-Planning-Project/src/main.cpp"
+}
+]

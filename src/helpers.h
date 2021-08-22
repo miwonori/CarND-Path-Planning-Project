@@ -24,15 +24,16 @@ string hasData(string s) {
   return "";
 }
 
-//
 // Helper functions related to waypoints and converting from XY to Frenet
 //   or vice versa
-//
 
 // For converting back and forth between radians and degrees.
 constexpr double pi() { return M_PI; }
 double deg2rad(double x) { return x * pi() / 180; }
 double rad2deg(double x) { return x * 180 / pi(); }
+
+// For converting MPH to m/s
+double MPH2mps(double x) { return x * 0.44704; }
 
 // Calculate distance between two points
 double distance(double x1, double y1, double x2, double y2) {
