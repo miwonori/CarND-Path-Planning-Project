@@ -112,6 +112,7 @@ int main() {
            * TODO: define a path made up of (x,y) points that the car will visit
            *   sequentially every .02 seconds
            */
+          double lane_width = 4.0;
           
           if (first_flag) {
             first_flag = 0;
@@ -147,48 +148,53 @@ int main() {
           vector<double> X;
           vector<double> Y;
 
-          double lane_width = 4.0;
           int num_of_mid_point = 3;
-          double del_s = (map_waypoints_s[WP_N] - car_s)/(num_of_mid_point + 1);
+          double next_WP_s = map_waypoints_s[WP_N];
+          double del_s = (next_WP_s - car_s)/(num_of_mid_point + 1);
           double mid_s;
           double mid_d;
           vector<double> mid_XY;
+          vector<double> mid_SD;
           
           X.push_back(car_x);
           Y.push_back(car_y);
+          mid_d = lane_width/2 + (lane_width * (current_lane_N-1));
+          if (path_size != 0){
+            for (int i = 0; i < path_size; i++){
+              mid_SD = getFrenet(previous_path_x[i], previous_path_y[i], deg2rad(car_yaw), 
+                                 map_waypoints_x, map_waypoints_y);
+              if (mid_SD[0] < next_WP_s){
+                X.push_back(previous_path_x[i]);
+                Y.push_back(previous_path_y[i]);
+              } else {
+                break;
+              }
+            }
+          } else {
+            for (int i = 0; i < num_of_mid_point; i++){
+              mid_s = car_s + (del_s * (i+1)) ;
+              mid_XY = getXY(mid_s, mid_d, map_waypoints_s, map_waypoints_x, map_waypoints_y);
+              X.push_back(mid_XY[0]);
+              Y.push_back(mid_XY[1]);
+            }
+          }
 
-          // if (path_size >= 3){
-          //   X.push_back(previous_path_x[1]);
-          //   Y.push_back(previous_path_y[1]);
-
-          //   X.push_back(previous_path_x[2]);
-          //   Y.push_back(previous_path_y[2]);
-          // }
-
-          // for (int i = 0; i < num_of_mid_point; i++){
-          //   mid_s = car_s + (del_s * (i+1)) ;
-          //   mid_d = lane_width/2 + (lane_width * (current_lane_N-1));
-          //   mid_XY = getXY(mid_s, mid_d, map_waypoints_s, map_waypoints_x, map_waypoints_y);
-          //   cout << "mid_XY X = " << mid_XY[0] << ", mid_XY Y = " << mid_XY[1] << endl;
-          //   X.push_back(mid_XY[0]);
-          //   Y.push_back(mid_XY[1]);
-          // }
-          // mid_XY = getXY(map_waypoints_s[WP_N], mid_d, map_waypoints_s, map_waypoints_x, map_waypoints_y);
-          // X.push_back(mid_XY[0]);
-          // Y.push_back(mid_XY[1]);
+          mid_XY = getXY(map_waypoints_s[WP_N], mid_d, map_waypoints_s, map_waypoints_x, map_waypoints_y);
+          X.push_back(mid_XY[0]);
+          Y.push_back(mid_XY[1]);
           // cout << "mid_XY X = " << mid_XY[0] << ", mid_XY Y = " << mid_XY[1] << endl;
-
-
+          cout << "1" << endl;
           tk::spline path_spline(X,Y);
+           cout << "2" << endl;
           double spline_Y;
 
           double Max_Speed = 45;    //MPH
           double max_acc = 9;
           double max_jerk_acc = 9 ; //m/s^3
           double del_t = 0.02;
-          double dist_inc;
+          double dist_inc = 0.4;
           // double acc = MPH2mps(car_speed - oldSpeed)/del_t;
-          double acc = MPH2mps(car_speed - oldSpeed)/delTime.count();
+          // double acc = MPH2mps(car_speed - oldSpeed)/delTime.count();
           // acc += max_jerk_acc*del_t;
           // acc += max_jerk_acc*delTime.count();
           // if (acc > max_acc){
@@ -210,13 +216,10 @@ int main() {
           //   dist_inc = 0.4;
           // }
 
-          dist_inc = 0.4;
           cout << "Est dist increment :" << dist_inc << endl;
           for (int i = 0; i < 20; i++){
             mid_s = car_s + (dist_inc*(i+1)) ;
-            mid_d = lane_width/2 + (lane_width * (current_lane_N-1));
             mid_XY = getXY(mid_s, mid_d, map_waypoints_s, map_waypoints_x, map_waypoints_y);
-            
             spline_Y = path_spline(mid_XY[0]);
             // if (i == 0){
             //   cout << "First WayPoint X = " << mid_XY[0] << ", First WayPoint Y = " << spline_Y << endl;
@@ -225,6 +228,7 @@ int main() {
             next_x_vals.push_back(mid_XY[0]);
             next_y_vals.push_back(spline_Y);
           }
+           cout << "4" << endl;
           // cout << "Last WayPoint X = " << mid_XY[0] << ", Last WayPoint Y = " << spline_Y << endl;
 
           
