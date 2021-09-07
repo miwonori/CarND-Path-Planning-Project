@@ -155,4 +155,22 @@ vector<double> getXY(double s, double d, const vector<double> &maps_s,
   return {x,y};
 }
 
+vector<vector<double>> makeTrajectory(double car_x, double car_y, double car_yaw, double car_s, int current_lane_N,
+                                      vector<double> previous_path_x, vector<double> previous_path_y,
+                                      vector<double> map_waypoints_x, vector<double> map_waypoints_y,vector<double> map_waypoints_s){
+  // x, y points for spline
+  vector<double> spline_x;
+  vector<double> spline_y;
+
+  int prev_size = previous_path_x.size();
+  if (prev_size < 5){
+    
+  }
+
+
+
+
+}
+
+
 #endif  // HELPERS_H
