@@ -779,6 +779,8 @@ string
 -
 vector
 -
+spline.h
+/mnt/d/carnd-projects/CarND-Path-Planning-Project/src/spline.h
 
 /mnt/d/carnd-projects/CarND-Path-Planning-Project/src/json.hpp
 algorithm
@@ -857,10 +859,10 @@ json.hpp
 /mnt/d/carnd-projects/CarND-Path-Planning-Project/src/json.hpp
 chrono
 -
-spline.h
-/mnt/d/carnd-projects/CarND-Path-Planning-Project/src/spline.h
 cmath
 -
+trajectory.h
+/mnt/d/carnd-projects/CarND-Path-Planning-Project/src/trajectory.h
 
 /mnt/d/carnd-projects/CarND-Path-Planning-Project/src/spline.h
 cstdio
@@ -877,4 +879,14 @@ sstream
 -
 string
 -
+
+/mnt/d/carnd-projects/CarND-Path-Planning-Project/src/trajectory.h
+math.h
+-
+vector
+-
+spline.h
+/mnt/d/carnd-projects/CarND-Path-Planning-Project/src/spline.h
+helpers.h
+/mnt/d/carnd-projects/CarND-Path-Planning-Project/src/helpers.h
 
