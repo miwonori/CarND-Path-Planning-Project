@@ -772,6 +772,16 @@ lapacke_mangling.h
 
 /mnt/d/carnd-projects/CarND-Path-Planning-Project/src/Eigen-3.3/Eigen/src/plugins/MatrixCwiseUnaryOps.h
 
+/mnt/d/carnd-projects/CarND-Path-Planning-Project/src/car.cpp
+car.h
+/mnt/d/carnd-projects/CarND-Path-Planning-Project/src/car.h
+math.h
+-
+
+/mnt/d/carnd-projects/CarND-Path-Planning-Project/src/car.h
+vector
+-
+
 /mnt/d/carnd-projects/CarND-Path-Planning-Project/src/helpers.h
 math.h
 -
@@ -861,8 +871,30 @@ chrono
 -
 cmath
 -
+map.h
+/mnt/d/carnd-projects/CarND-Path-Planning-Project/src/map.h
+car.h
+/mnt/d/carnd-projects/CarND-Path-Planning-Project/src/car.h
 trajectory.h
 /mnt/d/carnd-projects/CarND-Path-Planning-Project/src/trajectory.h
+planner.h
+/mnt/d/carnd-projects/CarND-Path-Planning-Project/src/planner.h
+
+/mnt/d/carnd-projects/CarND-Path-Planning-Project/src/map.h
+vector
+-
+
+/mnt/d/carnd-projects/CarND-Path-Planning-Project/src/planner.cpp
+planner.h
+/mnt/d/carnd-projects/CarND-Path-Planning-Project/src/planner.h
+
+/mnt/d/carnd-projects/CarND-Path-Planning-Project/src/planner.h
+vector
+-
+map.h
+/mnt/d/carnd-projects/CarND-Path-Planning-Project/src/map.h
+car.h
+/mnt/d/carnd-projects/CarND-Path-Planning-Project/src/car.h
 
 /mnt/d/carnd-projects/CarND-Path-Planning-Project/src/spline.h
 cstdio

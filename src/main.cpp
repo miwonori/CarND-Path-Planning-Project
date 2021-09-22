@@ -10,30 +10,27 @@
 
 #include <chrono>
 #include <cmath>
+#include "map.h"
+#include "car.h"
 #include "trajectory.h"
-
+#include "planner.h"
 
 // for convenience
 using nlohmann::json;
 using std::string;
 using std::vector;
 using namespace std;
-// using namespace pathplanner;
+
 
 int main() {
   uWS::Hub h;
 
   // Load up map values for waypoint's x,y,s and d normalized normal vectors
-  vector<double> map_waypoints_x;
-  vector<double> map_waypoints_y;
-  vector<double> map_waypoints_s;
-  vector<double> map_waypoints_dx;
-  vector<double> map_waypoints_dy;
-
+  MAP map;
+  
   // Waypoint map to read from
   string map_file_ = "../data/highway_map.csv";
   // The max s value before wrapping around the track back to 0
-  double max_s = 6945.554;
   int index = 0;
 
   std::ifstream in_map_(map_file_.c_str(), std::ifstream::in);
@@ -51,18 +48,14 @@ int main() {
     iss >> s;
     iss >> d_x;
     iss >> d_y;
-    map_waypoints_x.push_back(x);
-    map_waypoints_y.push_back(y);
-    map_waypoints_s.push_back(s);
-    map_waypoints_dx.push_back(d_x);
-    map_waypoints_dy.push_back(d_y);
+    map.setWaypoint(x, y, s, d_x, d_y);
   }
-  Trajectory trajectory;
-  trajectory.map_waypoints_x = map_waypoints_x;
-  trajectory.map_waypoints_y = map_waypoints_y;
-  trajectory.map_waypoints_s = map_waypoints_s;
 
-  h.onMessage([&trajectory]
+  CAR car;
+  Trajectory trajectory;
+  bool init_flag = true;
+
+  h.onMessage([&car, &trajectory, &map, &init_flag]
               (uWS::WebSocket<uWS::SERVER> ws, char *data, size_t length,
                uWS::OpCode opCode) {
     // "42" at the start of the message means there's a websocket message event.
@@ -105,8 +98,58 @@ int main() {
            * TODO: define a path made up of (x,y) points that the car will visit
            *   sequentially every .02 seconds
            */
-          vector<string> states = {"KL", "LLC", "RLC"};
-          int current_lane_N = ceil(car_d/4.0);
+          car.setCar(car_x, car_y, car_s, car_d, deg2rad(car_yaw), car_speed);
+          car.setLaneNum(map.lane_width);
+
+          int prev_size = previous_path_x.size();
+          double prev_s = 0.0;
+          if (prev_size > 1){
+            trajectory.setPrevPath(previous_path_x,previous_path_y);
+            trajectory.preTrajectory();
+            cout << "Car X = " << car_x << ", Car Y = " << car_y 
+                << ", Last Prev X = " << previous_path_x[prev_size-1] 
+                << ", Last Prev Y = " << previous_path_y[prev_size-1] << endl;
+            prev_s = trajectory.getS(map.waypoints_x,map.waypoints_y);           
+          } else {
+            cout << "Car X = " << car_x << ", Car Y = " << car_y << endl;
+          }
+
+          if (init_flag){
+            init_flag = false;
+            // for (int i=1;i<4;i++){
+            //   vector<double> tmp_xy = getXY(car.getS() + (i*0.4), 6.0, 
+            //                                 map.waypoints_s, map.waypoints_x,map.waypoints_y);
+            //   trajectory.next_x_vals.push_back(tmp_xy[0]);
+            //   trajectory.next_y_vals.push_back(tmp_xy[1]);
+            // }
+          }
+          
+          cout <<trajectory.next_x_vals.size() << endl;
+
+          /*----- Sensor Fusion Data -----*/
+          vector<CAR> obj_cars;
+          for (auto it=sensor_fusion.begin();it != sensor_fusion.end();it++){
+            CAR obj_car;
+            int ID = it.value()[0];
+            double X = it.value()[1];
+            double Y = it.value()[2];
+            double Vx = it.value()[3];
+            double Vy = it.value()[4];
+            double S = it.value()[5];
+            double D = it.value()[6];
+            obj_car.setfusiondata(ID, X, Y, Vx, Vy, S, D);
+            obj_car.setSpeed();
+            obj_car.setYaw();
+            obj_car.setLaneNum(map.lane_width);
+
+            obj_cars.push_back(obj_car);
+          }
+
+          if (prev_s < trajectory.max_dist){
+            Planner planner(map, car, obj_cars);
+            CAR next_car = planner.planning();
+          }
+
 
           /* End of TODO */
 
