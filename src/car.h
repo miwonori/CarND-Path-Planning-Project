@@ -23,8 +23,11 @@ class CAR{
     void setLaneNum(double lane_width);
     void setVxVy();
 
+    void stateUpdate(pair<MoveType, int>& _state, vector<CAR>& obj_cars, double t);
+
     double getS();
     pair<MoveType,int> getState();
+    double getPredictTime();
 
     void prediction();
 

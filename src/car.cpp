@@ -43,12 +43,32 @@ void CAR::setVxVy(){
     
 }
 
+void CAR::stateUpdate(pair<MoveType, int>& _state, vector<CAR>& obj_cars, double t){
+  state = _state;
+  MoveType mov = state.first;
+  int lane = state.second;
+  switch (mov) {
+    case KL:
+      // Accel = estMaxAccel(obj_cars, t);
+      break;
+    case PLC:
+      break;
+    case LC:
+      break;
+  }
+
+}
+
 double CAR::getS(){
   return S;
 }
 
 pair<MoveType,int> CAR::getState(){
   return state;
+}
+
+double CAR::getPredictTime(){
+  return predict_T;
 }
 
 void CAR::prediction(){
